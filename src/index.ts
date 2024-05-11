@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
 import express from 'express';
 import http from 'http';
@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import mongoose from 'mongoose';
+
+import router from './routes'
 
 const app = express();
 
@@ -27,3 +29,5 @@ server.listen(process.env.PORT, () => {
 mongoose.Promise = Promise;
 mongoose.connect(process.env.MONGO_URL);
 mongoose.connection.on('error', (error: Error) => console.log(error));
+
+app.use('/', router());
