@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getUsers, deleteUserById } from '../Models/users';
+import { getUsers, deleteUserById, getUserById, updateUserById } from '../Models/users';
 
 export const getAllUsers = async (req: express.Request, res: express.Response) => {
     try {
@@ -15,13 +15,37 @@ export const getAllUsers = async (req: express.Request, res: express.Response) =
 
 export const deleteUser = async (req: express.Request, res: express.Response) => {
     try {
-        const {id} = req.params
+        const { id } = req.params;
 
-        const deletedUser = await deleteUserById(id)
+        const deletedUser = await deleteUserById(id);
 
-        return res.json(deletedUser)
+        return res.json(deletedUser);
     } catch (err) {
         console.log(err);
-        return res.sendStatus(400); 
+        return res.sendStatus(400);
     }
-}
+};
+
+export const updateUser = async (req: express.Request, res: express.Response) => {
+    try {
+        const { id } = req.params;
+        const { username } = req.body;
+
+        console.log('ID: ', id);
+        console.log('USER NAME: ', username);
+
+        if (!username) {
+            return res.sendStatus(400);
+        }
+
+        const user = await updateUserById(id, username);
+
+        user.username = username;
+        await user.save();
+
+        return res.status(200).json(user).end();
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(400);
+    }
+};
